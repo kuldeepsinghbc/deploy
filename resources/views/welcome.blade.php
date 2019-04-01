@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Deploy Laravel on DigitalOcean
+                    Deployed Laravel on DigitalOcean
                 </div>
 
                 <div class="links">
