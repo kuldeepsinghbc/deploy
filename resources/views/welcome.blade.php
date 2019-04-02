@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Deployed Laravel on DigitalOcean
+                    Deployed Laravel Testing AdminLTE 3
                 </div>
 
                 <div class="links">
