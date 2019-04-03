@@ -14,6 +14,32 @@ import { Form, HasError, AlertError } from 'vform'
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
+// import SweetAlert2 from 'sweetalert2/dist/sweetalert2.js';
+// import 'sweetalert2/src/sweetalert2.scss';
+
+// import swal from 'sweetalert2'
+// window.swal = swal;
+// const toast = swal.mixin({
+//     toast: true,
+//     position: 'top-end',
+//     showConfirmButton: false,
+//     timer: 3000
+// });
+// toast({
+//   type: 'success',
+//   title:'User Created Successfully'
+// })
+// window.toast = toast;
+
+
+
+import VueProgressBar from 'vue-progressbar'
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '3px'
+  })
+
 
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
@@ -34,6 +60,11 @@ Vue.filter('upText', function (text) {
 Vue.filter('myDate', function (created) {
   return moment(created).format('MMMM Do YYYYY');
 });
+
+// let Fire = new Vue();
+// window.Fire = Fire;
+window.Fire = new Vue();
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
