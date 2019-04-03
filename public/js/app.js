@@ -2008,9 +2008,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     createUser: function createUser() {
       this.$Progress.start();
-      this.form.post('api/user');
-      Fire.$emit('AfterCreate');
-      $('#addNew').modal('hide'); // toast({
+      this.form.post('api/user').then(function () {
+        Fire.$emit('AfterCreate');
+        $('#addNew').modal('hide');
+      }).catch(function () {}); // toast({
       //   type: 'success',
       //   title: 'User Created  successfully'
       // })
