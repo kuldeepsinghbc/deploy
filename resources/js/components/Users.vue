@@ -6,7 +6,7 @@
               <div class="card-header">
                 <h3 class="card-title">Users Table</h3>
                 <div class="card-tools">
-                  <button class="btn btn-success" data-toggle="modal" data-target="#addNew">Add New
+                  <button class="btn btn-success" @click="newModal" >Add New
                     <i class="fas fa-user-plus fa-fw"></i>
                   </button>
                 </div>
@@ -30,7 +30,7 @@
                       <td>{{user.type | upText}}</td>
                       <td>{{user.created_at | myDate}}</td>
                       <td>
-                        <a href="#">
+                        <a href="#" @click="editModal(user)">
                           <i class="fa fa-edit blue"></i>
                         </a>/
                         <a href="#" @click="deleteUser(user.id)">
@@ -51,12 +51,13 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="addNewLabel">Add New</h5>
+                <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New</h5>
+                <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update User's Info</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <form @submit.prevent="createUser">
+              <form @submit.prevent="editmode ? updateUser() : createUser()">
                 <div class="modal-body">
                   <div class="form-group">
                     <input v-model="form.name" type="text" name="name"
@@ -93,7 +94,8 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Create </button>
+                  <button v-show="editmode" type="submit" class="btn btn-primary">Update </button>
+                  <button v-show="!editmode" type="submit" class="btn btn-primary">Create </button>
                 </div>
               </form>
             </div>
@@ -106,6 +108,7 @@
     export default {
         data() {
             return {
+                editmode:false,
                 users : {},
                 form: new Form({
                     name : '',
@@ -118,6 +121,21 @@
             }
         },
         methods:{
+          updateUser(){
+            console.log('Editing data');
+          },
+          editModal(user){
+            
+            this.editmode = true;
+            this.form.reset();
+            $('#addNew').modal('show');
+            this.form.fill(user);
+          },
+          newModal(){
+            this.editmode = false;
+            this.form.reset();
+            $('#addNew').modal('show');
+          },
         deleteUser(id){
           Swal.fire({
             title: 'Are you sure?',
