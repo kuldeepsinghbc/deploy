@@ -176,7 +176,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         // Yajra\Datatables\DatatablesServiceProvider::class,
         // 'Image' => Intervention\Image\Facades\Image::class,
-        'Image' => Intervention\Image\ImageManagerStatic::class,
+        // 'Image' => Intervention\Image\ImageManagerStatic::class,
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
