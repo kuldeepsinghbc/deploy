@@ -79,14 +79,14 @@
                                     <label for="inputName" class="col-sm-2 control-label">Name</label>
 
                                     <div class="col-sm-12">
-                                    <input type="email" class="form-control" id="inputName" placeholder="Name">
+                                    <input type="email"  v-model="form.name" class="form-control" id="inputName" placeholder="Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputEmail" class="col-sm-2 control-label">Email</label>
 
                                     <div class="col-sm-12">
-                                    <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                    <input type="email" v-model="form.email" class="form-control" id="inputEmail" placeholder="Email">
                                     </div>
                                 </div>
 
@@ -100,7 +100,7 @@
                                 <div class="form-group">
                                     <label for="photo" class="col-sm-2 control-label">Profile Photo</label>
                                     <div class="col-sm-12">
-                                        <input type="file" name="photo" class="form-input">
+                                        <input type="file" @change="updateProfile" name="photo" class="form-input">
                                     </div>
 
                                 </div>
@@ -115,7 +115,7 @@
 
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-12">
-                                    <button type="submit" class="btn btn-success">Update</button>
+                                    <button @click.prevent="updateInfo" type="submit" class="btn btn-success">Update</button>
                                     </div>
                                 </div>
                                 </form>
@@ -136,8 +136,47 @@
 
 <script>
     export default {
+        data(){
+            return{
+                form: new Form({
+                    id:'',
+                    name : '',
+                    email: '',
+                    password: '',
+                    type: '',
+                    bio: '',
+                    photo: ''
+                })
+            }
+        },
         mounted() {
             console.log('Component mounted.')
+        },
+        methods:{
+            updateProfile(e){
+                // console.log('uploading');
+                let file = e.target.files[0];
+                console.log(file);
+                let reader = new FileReader();
+                reader.onloadend =(e)=>{
+                    // console.log('RESULT', reader.result)
+                    this.form.photo = reader.result;
+                }
+                reader.readAsDataURL(file);
+            },
+            updateInfo(){
+                this.form.put('/api/profile/')
+                .then(()=>{
+
+                })
+                .catch(()=>{
+                    
+                });
+            }
+        },
+        created(){
+            axios.get('api/profile')
+            .then(({data})=>(this.form.fill(data)));
         }
     }
 </script>
