@@ -158,41 +158,57 @@
         },
         methods:{
             getProfilePhoto(){
-                 let photo = (this.form.photo.length > 200) ? this.form.photo : "img/profile/"+ this.form.photo ;
-                return photo;
-               
-            },
-            updateProfile(e){
-                // console.log('uploading');
-                let file = e.target.files[0];
-                // console.log(file);
-                let reader = new FileReader();
-                if(file['size'] < 2111775){
-                    reader.onloadend =(e)=>{
-                    // console.log('RESULT', reader.result)
-                    this.form.photo = reader.result;
-                }
-                reader.readAsDataURL(file);
-                }else{
-                    Swal.fire({
-                        type:'error', 
-                        title:'Oops...',
-                        text:'You are loading a large file'
-                    })
-                }
-                
+
+                // return "/img/profile/"+this.form.photo;
+                 let prefix = (this.form.photo.match(/\//) ? '' : '/img/userProfile/');
+                return prefix + this.form.photo;
             },
             updateInfo(){
                 this.$Progress.start();
-                this.form.put('/api/profile/')
+                if(this.form.password == ''){
+                    this.form.password = undefined;
+                }
+                this.form.put('api/profile')
                 .then(()=>{
-                this.$Progress.finish();
+                     Fire.$emit('AfterCreate');
+                    this.$Progress.finish();
                 })
-                .catch(()=>{
+                .catch(() => {
                     this.$Progress.fail();
-
                 });
-            }
+            },
+
+            updateProfile(e){
+                let file = e.target.files[0];
+                    console.log(file);
+                    let reader = new FileReader();
+                    // let vm = this;
+                    if(file['size'] < 2111775){
+                        reader.onloadend = (file) => {
+                            // console.log('RESULT', reader.result)
+                            this.form.photo = reader.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }else{
+                         swal({
+                            type: 'error',
+                            title: 'Oops...',
+                            text: 'You are uploading a large file',
+                        })
+                    }
+                
+            },
+            // updateInfo(){
+            //     this.$Progress.start();
+            //     this.form.put('/api/profile/')
+            //     .then(()=>{
+            //     this.$Progress.finish();
+            //     })
+            //     .catch(()=>{
+            //         this.$Progress.fail();
+
+            //     });
+            // }
         },
         created(){
             axios.get('api/profile')

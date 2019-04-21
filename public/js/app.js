@@ -2363,41 +2363,48 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getProfilePhoto: function getProfilePhoto() {
-      var photo = this.form.photo.length > 200 ? this.form.photo : "img/profile/" + this.form.photo;
-      return photo;
+      // return "/img/profile/"+this.form.photo;
+      var prefix = this.form.photo.match(/\//) ? '' : '/img/userProfile/';
+      return prefix + this.form.photo;
     },
-    updateProfile: function updateProfile(e) {
+    updateInfo: function updateInfo() {
       var _this = this;
 
-      // console.log('uploading');
-      var file = e.target.files[0]; // console.log(file);
+      this.$Progress.start();
 
-      var reader = new FileReader();
+      if (this.form.password == '') {
+        this.form.password = undefined;
+      }
+
+      this.form.put('api/profile').then(function () {
+        Fire.$emit('AfterCreate');
+
+        _this.$Progress.finish();
+      }).catch(function () {
+        _this.$Progress.fail();
+      });
+    },
+    updateProfile: function updateProfile(e) {
+      var _this2 = this;
+
+      var file = e.target.files[0];
+      console.log(file);
+      var reader = new FileReader(); // let vm = this;
 
       if (file['size'] < 2111775) {
-        reader.onloadend = function (e) {
+        reader.onloadend = function (file) {
           // console.log('RESULT', reader.result)
-          _this.form.photo = reader.result;
+          _this2.form.photo = reader.result;
         };
 
         reader.readAsDataURL(file);
       } else {
-        Swal.fire({
+        swal({
           type: 'error',
           title: 'Oops...',
-          text: 'You are loading a large file'
+          text: 'You are uploading a large file'
         });
       }
-    },
-    updateInfo: function updateInfo() {
-      var _this2 = this;
-
-      this.$Progress.start();
-      this.form.put('/api/profile/').then(function () {
-        _this2.$Progress.finish();
-      }).catch(function () {
-        _this2.$Progress.fail();
-      });
     }
   },
   created: function created() {
