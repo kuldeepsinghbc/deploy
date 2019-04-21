@@ -26,10 +26,12 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.8.1",
         "admin-lte": "^3.0.0-alpha.2",
+        "material-design-icons-iconfont": "^4.0.5",
         "moment": "^2.24.0",
         "sweetalert2": "^8.8.1",
         "vform": "^1.0.0",
         "vue-progressbar": "^0.7.5",
-        "vue-router": "^3.0.2"
+        "vue-router": "^3.0.2",
+        "vuetify": "^1.5.12"
     }
 }

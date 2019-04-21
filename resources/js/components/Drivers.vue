@@ -4,49 +4,53 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Users Table</h3>
+                <h3 class="card-title">Drivers Table</h3>
                 <div class="card-tools">
-                  <button class="btn btn-success" @click="newModal" >Add New
+                  <button class="btn btn-success" @click="newModal" >Add New Driver
                     <i class="fas fa-user-plus fa-fw"></i>
                   </button>
-                  <button class="btn btn-success" @click="sortBy('name')" >Sort By Name
-                    <i class="fas fa-user-plus fa-fw"></i>
-                  </button>
-                  <button class="btn btn-success" @click="sortBy('id')" >Sort By ID
-                    <i class="fas fa-user-plus fa-fw"></i>
-                  </button>
+                  
                 </div>
               </div>
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover">
-                  <tbody>
-                    <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Type</th>
-                      <th>Registered At</th>
-                      <th>Modify</th>
-                    </tr>
-                    <tr v-for="user in users">
-                      <td>{{user.id}}</td>
-                      <td>{{user.name}}</td>
-                      <td>{{user.email}}</td>
-                      <td>{{user.type | upText}}</td>
-                      <td>{{user.created_at | myDate}}</td>
-                      <td>
-                        <a href="#" @click="editModal(user)">
+              <!-- <div class="card-body table-responsive p-0"> -->
+                <v-data-table
+                  :headers="headers"
+                  :items="drivers"
+                  class="elevation-1"
+                >
+                  <template slot="items" slot-scope="props">
+                    <td v-for="(header,index) in headers" :key="index">{{ props.item[header.value] }}</td>
+                    <!-- <td>{{ props.item.id }}</td> -->
+                     <!-- <td class="">{{ props.item.name }}</td> -->
+                    <!--<td class="">{{ users.item.email }}</td>
+                    <td class="">{{ users.item.type }}</td>
+                    <td class="">{{ users.item.created_at |myDate }}</td>  -->
+                    <!-- <td class="">{{ props.item.created_at |myDate }}</td>-->
+                    <td>
+                        <!-- <a href="#" @click="editModal(props.item)">
                           <i class="fa fa-edit blue--text"></i>
                         </a>/
-                        <a href="#" @click="deleteUser(user.id)">
+                        <a href="#" @click="deleteUser(props.item.id)">
                           <i class="fa fa-trash red--text"></i>
-                        </a>
+                        </a> -->
+                        <v-icon
+                          small
+                          class="mr-2"
+                          @click="editModal(props.item)"
+                        >
+                          edit
+                        </v-icon>
+                        <v-icon
+                          small
+                          @click="deleteUser(props.item.id)"
+                        >
+                          delete
+                        </v-icon>
                       </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                  </template>
+                </v-data-table>
+              <!-- </div> -->
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -115,7 +119,7 @@
         data() {
             return {
                 editmode:false,
-                users : {},
+                // users : {},
                 form: new Form({
                     id:'',
                     name : '',
@@ -124,13 +128,25 @@
                     type: '',
                     bio: '',
                     photo: ''
-                })
+                }),
+                headers: [
+                {
+                  text: 'ID',
+                  align: 'left',
+                  // sortable: false,
+                  value: 'id'
+                },
+                { text: 'Name', value: 'name' },
+                // { text: 'Name', value: 'name' },
+                { text: 'Email', value: 'email',sortable: false, },
+                { text: 'Type', value: 'type',sortable: false, },
+                { text: 'Registered At', value: 'created_at',sortable: false, },
+                { text: 'Actions', value: 'Actions' }
+              ],
+              drivers: []
             }
         },
         methods:{
-          sortBy(prop){
-            this.users.sort((a,b) => a[prop] < b[prop] ? -1 : 1)
-          },
           updateUser(){
             this.$Progress.start();
             // console.log('Editing data');
@@ -186,10 +202,11 @@
               }
             })           
           },  
-          loadUsers(){
-            axios.get("api/user").then(({data})=> (this.users = data.data));
+          loadDrivers(){
+            axios.get("api/user").then(({data})=>{
+               this.drivers.push(...data.data);
+            });
           },
-          
           createUser(){
             this.$Progress.start();
 
@@ -209,15 +226,14 @@
 
                 })        
           },
+          
         },
-          created() {
-            this.loadUsers();
-            // setInterval(()=>this.loadUsers(), 3000);
+         created() {
+            this.loadDrivers();
             Fire.$on('AfterCreate',()=>{
-              this.loadUsers();
+              this.loadDrivers();
             })
         }
-         
     }
         
     
